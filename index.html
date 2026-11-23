@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OutdoorFit — Планировщик тренировок</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="#plans" class="logo">
+        <span class="logo-icon">↗</span>
+        Outdoor<span>Fit</span>
+      </a>
+
+      <nav aria-label="Основная навигация">
+        <a href="#plans">Планы</a>
+        <a href="#monitoring">Мониторинг</a>
+        <a href="#preparation">Подготовка</a>
+        <a href="#sources">Источники</a>
+      </nav>
+
+      <span class="header-tag">TRAIN SMARTER</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">OUTDOOR TRAINING PLANNER</p>
+        <h1>Планируй. Тренируйся. <span>Развивайся.</span></h1>
+        <p class="subtitle">
+          Создавай планы тренировок на открытом воздухе
+          и контролируй подготовку.
+        </p>
+      </div>
+      <span class="city-tag">📍 Санкт-Петербург</span>
+    </section>
+
+   <section class="stats">
+  <div class="stat-card">
+    <span class="stat-label">ТЕКУЩИЙ ПЛАН</span>
+    <strong id="planStatus">Не создан</strong>
+    <span class="stat-note">План тренировки</span>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-label">ПОДГОТОВКА</span>
+    <strong id="progressValue">0%</strong>
+    <span class="stat-note">Выполнение чек-листа</span>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-label">ПОГОДНЫЕ ДАННЫЕ</span>
+    <strong id="weatherStat">—</strong>
+    <span class="stat-note" id="weatherStatNote">
+      Ожидание данных
+    </span>
+  </div>
+</section>
+
+    <div class="dashboard-grid">
+      <section id="plans" class="card">
+        <div class="card-heading">
+          <span class="section-icon">01</span>
+          <div>
+            <p class="eyebrow">ПЛАНИРОВАНИЕ</p>
+            <h2>Новая тренировка</h2>
+          </div>
+        </div>
+
+        <form id="trainingForm" novalidate>
+          <label for="trainingName">Название тренировки</label>
+          <input id="trainingName" type="text"
+            placeholder="Например: Утренняя пробежка"
+            maxlength="100" required>
+
+          <label for="trainingLocation">Место</label>
+          <input id="trainingLocation" type="text"
+            value="Санкт-Петербург" readonly>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="trainingDate">Дата тренировки</label>
+              <input id="trainingDate" type="date" required>
+            </div>
+
+            <div class="field">
+              <label for="trainingType">Вид активности</label>
+              <select id="trainingType">
+                <option value="running">Бег</option>
+                <option value="workout">
+                  Тренировка на площадке
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <label class="checkbox-label">
+            <input id="isDark" type="checkbox">
+            <span>Тренировка в тёмное время суток</span>
+          </label>
+
+          <button class="primary-btn" type="submit">
+            Создать план →
+          </button>
+        </form>
+
+        <p id="formMessage" role="status"
+          aria-live="polite"></p>
+
+        <div id="currentPlan"></div>
+      </section>
+
+      <div class="side-column">
+        <section id="monitoring" class="card">
+          <div class="card-heading">
+            <span class="section-icon">02</span>
+            <div>
+              <p class="eyebrow">LIVE DATA</p>
+              <h2>Мониторинг погоды</h2>
+            </div>
+          </div>
+
+          <div class="weather-placeholder">
+  <span class="weather-icon" id="weatherIcon">☁</span>
+  <div>
+    <strong>Санкт-Петербург</strong>
+    <p id="weatherStatus" role="status" aria-live="polite">
+      Ожидание загрузки погоды
+    </p>
+  </div>
+</div>
+
+<div id="weatherDetails" class="weather-details" hidden>
+  <p>
+    Температура:
+    <strong id="weatherTemp">—</strong>
+  </p>
+
+  <p>
+    Скорость ветра:
+    <strong id="weatherWind">—</strong>
+  </p>
+
+  <p>
+    Условия:
+    <strong id="weatherCondition">—</strong>
+  </p>
+</div>
+
+<p class="muted" id="weatherUpdated">
+  Данные ещё не обновлялись.
+</p>
+
+<button type="button" id="refreshWeatherBtn"
+  class="secondary-btn">
+  Обновить погоду
+</button>
+<div class="weather-recommendations">
+  <h3>Рекомендации по погоде</h3>
+
+  <div id="weatherRecommendations" aria-live="polite">
+    <p class="muted">
+      Рекомендации появятся после загрузки погоды.
+    </p>
+  </div>
+</div>
+
+          <p class="muted">
+            Реальные погодные показатели добавим
+            на следующем этапе.
+          </p>
+        </section>
+
+        <section class="card">
+          <div class="card-heading">
+            <span class="section-icon">03</span>
+            <div>
+              <p class="eyebrow">TRAINING STATUS</p>
+              <h2>Сводка подготовки</h2>
+            </div>
+          </div>
+
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+
+          <div id="summary" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+
+   
+<section id="savedPlans" class="card">
+  <div class="card-heading">
+    <span class="section-icon">★</span>
+    <div>
+      <p class="eyebrow">MY TRAININGS</p>
+      <h2>Сохранённые тренировки</h2>
+    </div>
+  </div>
+
+  <div class="plan-actions">
+    <button type="button" id="savePlanBtn"
+      class="primary-btn">
+      Сохранить план
+    </button>
+
+    <button type="button" id="newPlanBtn"
+      class="secondary-btn">
+      Новый план
+    </button>
+  </div>
+
+  <p id="storageMessage"
+    role="status" aria-live="polite"></p>
+
+  <p class="muted">
+    Планы хранятся только в этом браузере.
+    При очистке данных браузера они могут исчезнуть.
+  </p>
+
+  <div id="savedPlansList"></div>
+</section>
+
+   <section id="report" class="card">
+  <div class="card-heading">
+    <span class="section-icon">06</span>
+    <div>
+      <p class="eyebrow">TRAINING REPORT</p>
+      <h2>Отчёт о тренировке</h2>
+    </div>
+  </div>
+
+  <p class="muted">
+    Отчёт формируется по текущему плану тренировки
+    и отмеченным пунктам подготовки.
+  </p>
+
+  <div class="plan-actions">
+    <button
+      type="button"
+      id="generateReportBtn"
+      class="primary-btn">
+      Сформировать отчёт
+    </button>
+
+    <button
+      type="button"
+      id="printReportBtn"
+      class="secondary-btn"
+      disabled>
+      Распечатать отчёт
+    </button>
+  </div>
+
+  <p id="reportMessage" role="status" aria-live="polite"></p>
+
+  <div id="reportContent"></div>
+</section>
+<section id="preparation" class="card">
+      <div class="card-heading">
+        <span class="section-icon">04</span>
+        <div>
+          <p class="eyebrow">CHECKLIST</p>
+          <h2>Подготовка к тренировке</h2>
+        </div>
+      </div>
+      <div id="checklist"></div>
+    </section>
+
+    <section id="sources" class="card">
+      <div class="card-heading">
+        <span class="section-icon">05</span>
+        <div>
+          <p class="eyebrow">REFERENCES</p>
+          <h2>Источники информации</h2>
+        </div>
+      </div>
+      <div id="sourcesList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© OutdoorFit — учебный проект</p>
+    <p>
+      Приложение не гарантирует безопасность тренировок.
+      Решение о проведении тренировки принимает пользователь.
+    </p>
+  </footer>
+
+  <script src="data.js"></script>
+<script src="main.js"></script>
+<script src="weather.js"></script>
+</body>
+</html>
